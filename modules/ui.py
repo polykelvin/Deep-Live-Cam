@@ -69,7 +69,7 @@ preview_label = None
 preview_slider = None
 source_label = None
 target_label = None
-status_label = None
+status_label = None  # Initialize as None and set it later when ROOT is created
 popup_status_label = None
 popup_status_label_live = None
 source_label_dict = {}
@@ -135,7 +135,7 @@ def load_switch_states():
 
 
 def create_root(start: Callable[[], None], destroy: Callable[[], None]) -> ctk.CTk:
-    global source_label, target_label, status_label, show_fps_switch
+    global source_label, target_label, status_label, show_fps_switch, ROOT
 
     load_switch_states()
 
@@ -365,7 +365,7 @@ def create_root(start: Callable[[], None], destroy: Callable[[], None]) -> ctk.C
     live_button.place(relx=0.65, rely=0.86, relwidth=0.2, relheight=0.05)
     # --- End Camera Selection ---
 
-    status_label = ctk.CTkLabel(root, text=None, justify="center")
+    status_label = ctk.CTkLabel(root, text=None, justify="center")  # Set status_label after ROOT is initialized
     status_label.place(relx=0.1, rely=0.9, relwidth=0.8)
 
     donate_label = ctk.CTkLabel(
@@ -556,8 +556,11 @@ def create_preview(parent: ctk.CTkToplevel) -> ctk.CTkToplevel:
 
 
 def update_status(text: str) -> None:
-    status_label.configure(text=_(text))
-    ROOT.update()
+    if status_label is not None:
+        status_label.configure(text=_(text))
+        ROOT.update()
+    else:
+        print(f"Status: {text}")  # Fallback to console output if status_label is not initialized
 
 
 def update_pop_status(text: str) -> None:
